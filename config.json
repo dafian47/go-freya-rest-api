@@ -1,0 +1,25 @@
+{
+  "server": {
+    "port": ":5000"
+  },
+  "deploy": {
+    "type": "local",
+    "to": {
+      "local": {
+        "name": "local",
+        "debug": true,
+        "dsn": "host=localhost user=davian dbname=db_freya_rest_api sslmode=disable password="
+      },
+      "staging": {
+        "name": "staging",
+        "debug": false,
+        "dsn": "host=localhost user=user dbname=db_template sslmode=disable password=password"
+      },
+      "production": {
+        "name": "production",
+        "debug": false,
+        "dsn": "host=localhost user=user dbname=db_template sslmode=disable password=password"
+      }
+    }
+  }
+}
