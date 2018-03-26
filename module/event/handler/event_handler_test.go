@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-func TestGetEventAll(t *testing.T) {
+func TestEventHandler_GetEventAll(t *testing.T) {
 
 	e := echo.New()
 	req := httptest.NewRequest(echo.GET, "/event/", nil)
@@ -17,7 +17,6 @@ func TestGetEventAll(t *testing.T) {
 	c := e.NewContext(req, rec)
 
 	mockRepo := new(mocks.EventRepository)
-	//mockRepo.On("GetEventAll").Return(&mockRepo, nil)
 
 	h := eventHandler{
 		r: mockRepo,
@@ -29,18 +28,38 @@ func TestGetEventAll(t *testing.T) {
 	mockRepo.AssertExpectations(t)
 }
 
-func TestGetEvent(t *testing.T) {
+func TestEventHandler_GetEvent(t *testing.T) {
+
+	id := "02"
+
+	e := echo.New()
+	req := httptest.NewRequest(echo.GET, "/event/"+id, nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetPath("/event/:id")
+	c.SetParamNames("id")
+	c.SetParamValues(id)
+
+	mockRepo := new(mocks.EventRepository)
+
+	h := eventHandler{
+		r: mockRepo,
+	}
+
+	h.GetEvent(c)
+
+	assert.Equal(t, http.StatusOK, rec.Code)
+	mockRepo.AssertExpectations(t)
+}
+
+func TestEventHandler_CreateEvent(t *testing.T) {
 
 }
 
-func TestCreateEvent(t *testing.T) {
+func TestEventHandler_UpdateEvent(t *testing.T) {
 
 }
 
-func TestUpdateEvent(t *testing.T) {
-
-}
-
-func TestDeleteEvent(t *testing.T) {
+func TestEventHandler_DeleteEvent(t *testing.T) {
 
 }

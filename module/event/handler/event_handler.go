@@ -24,10 +24,10 @@ func NewEventHandler(e *echo.Echo, eventRepo repo.EventRepository) {
 	handler := &eventHandler{r: eventRepo}
 
 	e.GET("/event/", handler.GetEventAll)
-	e.GET("/event/:event_id", handler.GetEvent)
+	e.GET("/event/:id", handler.GetEvent)
 	e.POST("/event/", handler.CreateEvent)
-	e.PUT("/event/", handler.UpdateEvent)
-	e.DELETE("/event/", handler.DeleteEvent)
+	e.PUT("/event/:id", handler.UpdateEvent)
+	e.DELETE("/event/:id", handler.DeleteEvent)
 }
 
 func (h *eventHandler) GetEventAll(c echo.Context) error {
@@ -42,7 +42,7 @@ func (h *eventHandler) GetEventAll(c echo.Context) error {
 
 func (h *eventHandler) GetEvent(c echo.Context) error {
 
-	eventID := c.Param("event_id")
+	eventID := c.Param("id")
 
 	item, err := h.r.GetEvent(eventID)
 	if err != nil {
@@ -88,7 +88,7 @@ func (h *eventHandler) UpdateEvent(c echo.Context) error {
 
 func (h *eventHandler) DeleteEvent(c echo.Context) error {
 
-	eventID := c.Param("event_id")
+	eventID := c.Param("id")
 
 	_, err := h.r.GetEvent(eventID)
 	if err != nil {
