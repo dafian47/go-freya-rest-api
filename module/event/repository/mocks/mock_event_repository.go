@@ -1,9 +1,9 @@
 package mocks
 
 import (
+	base "github.com/dafian47/go-freya-rest-api/module"
 	model "github.com/dafian47/go-freya-rest-api/module/event"
 	"github.com/stretchr/testify/mock"
-	base "gitlab.com/xeranta/ustadz-stream/ustadz-stream-go/module"
 	"log"
 )
 
