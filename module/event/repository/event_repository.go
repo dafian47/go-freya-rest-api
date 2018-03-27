@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"errors"
+	base "github.com/dafian47/go-freya-rest-api/module"
 	model "github.com/dafian47/go-freya-rest-api/module/event"
 	"github.com/jinzhu/gorm"
 )
@@ -29,7 +29,7 @@ func (r *eventRepo) GetEventAll() ([]model.Event, error) {
 	r.DB.Find(&itemList)
 
 	if len(itemList) == 0 {
-		return nil, errors.New("empty data")
+		return nil, base.EMPTY_ERROR
 	}
 
 	return itemList, nil
@@ -42,7 +42,7 @@ func (r *eventRepo) GetEvent(eventID string) (model.Event, error) {
 	r.DB.Where(&model.Event{ID: eventID}).First(&item)
 
 	if item.ID == "" {
-		return item, errors.New("not found")
+		return item, base.NOT_FOUND_ERROR
 	}
 
 	return item, nil
@@ -53,7 +53,7 @@ func (r *eventRepo) CreateEvent(event model.Event) (model.Event, error) {
 	r.DB.Save(&event)
 
 	if event.ID == "" {
-		return event, errors.New("not found")
+		return event, base.FAILED_SAVE_ERROR
 	}
 
 	return event, nil
@@ -64,7 +64,7 @@ func (r *eventRepo) UpdateEvent(event model.Event) (model.Event, error) {
 	r.DB.Save(&event)
 
 	if event.ID == "" {
-		return event, errors.New("not found")
+		return event, base.FAILED_UPDATE_ERROR
 	}
 
 	return event, nil
@@ -77,7 +77,7 @@ func (r *eventRepo) DeleteEvent(eventID string) (bool, error) {
 	r.DB.Where(&model.Event{ID: eventID}).First(&item)
 
 	if item.ID == "" {
-		return false, errors.New("not found")
+		return false, base.NOT_FOUND_ERROR
 	}
 
 	r.DB.Delete(&item)

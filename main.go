@@ -2,12 +2,17 @@ package main
 
 import (
 	"flag"
-	cfg "github.com/dafian47/go-freya-rest-api/config"
 	"github.com/dafian47/go-freya-rest-api/middleware"
-	"github.com/dafian47/go-freya-rest-api/module/event/handler"
-	"github.com/dafian47/go-freya-rest-api/module/event/repository"
 	"github.com/labstack/echo"
 	"github.com/labstack/gommon/log"
+
+	cfg "github.com/dafian47/go-freya-rest-api/config"
+
+	userHandler "github.com/dafian47/go-freya-rest-api/module/user/handler"
+	userRepo "github.com/dafian47/go-freya-rest-api/module/user/repository"
+
+	eventHandler "github.com/dafian47/go-freya-rest-api/module/event/handler"
+	eventRepo "github.com/dafian47/go-freya-rest-api/module/event/repository"
 )
 
 var config cfg.Config
@@ -52,14 +57,13 @@ func main() {
 	e := echo.New()
 	e.Logger.SetLevel(log.INFO)
 	e.Use(middleware.CORS())
-	e.Use(middleware.CSRF())
 	e.Use(middleware.Secure())
 	e.Use(middleware.Recover())
 
 	db := cfg.InitDB(databaseUrl, isDebug)
 
-	eventRepo := repository.NewEventRepo(db)
-	handler.NewEventHandler(e, eventRepo)
+	userHandler.NewUserHandler(e, userRepo.NewUserRepository(db))
+	eventHandler.NewEventHandler(e, eventRepo.NewEventRepo(db))
 
 	e.Logger.Fatal(e.Start(port))
 }

@@ -1,10 +1,12 @@
 package handler
 
 import (
-	model "github.com/dafian47/go-freya-rest-api/module/event"
-	repo "github.com/dafian47/go-freya-rest-api/module/event/repository"
 	"github.com/labstack/echo"
 	"net/http"
+
+	base "github.com/dafian47/go-freya-rest-api/module"
+	model "github.com/dafian47/go-freya-rest-api/module/event"
+	"github.com/dafian47/go-freya-rest-api/module/event/repository"
 )
 
 type EventHandler interface {
@@ -16,10 +18,10 @@ type EventHandler interface {
 }
 
 type eventHandler struct {
-	r repo.EventRepository
+	r repository.EventRepository
 }
 
-func NewEventHandler(e *echo.Echo, eventRepo repo.EventRepository) {
+func NewEventHandler(e *echo.Echo, eventRepo repository.EventRepository) {
 
 	handler := &eventHandler{r: eventRepo}
 
@@ -34,10 +36,18 @@ func (h *eventHandler) GetEventAll(c echo.Context) error {
 
 	itemList, err := h.r.GetEventAll()
 	if err != nil {
-		return c.JSON(http.StatusNotFound, err.Error())
+		return c.JSON(http.StatusNotFound, &base.Response{
+			Status:  http.StatusNotFound,
+			Message: err.Error(),
+			Data:    nil,
+		})
 	}
 
-	return c.JSON(http.StatusOK, itemList)
+	return c.JSON(http.StatusOK, &base.Response{
+		Status:  http.StatusOK,
+		Message: base.SUCCESS_GET_DATA_ALL,
+		Data:    itemList,
+	})
 }
 
 func (h *eventHandler) GetEvent(c echo.Context) error {
@@ -46,10 +56,18 @@ func (h *eventHandler) GetEvent(c echo.Context) error {
 
 	item, err := h.r.GetEvent(eventID)
 	if err != nil {
-		return c.JSON(http.StatusNotFound, err.Error())
+		return c.JSON(http.StatusNotFound, &base.Response{
+			Status:  http.StatusNotFound,
+			Message: err.Error(),
+			Data:    item,
+		})
 	}
 
-	return c.JSON(http.StatusOK, item)
+	return c.JSON(http.StatusOK, &base.Response{
+		Status:  http.StatusOK,
+		Message: base.SUCCESS_GET_DATA,
+		Data:    item,
+	})
 }
 
 func (h *eventHandler) CreateEvent(c echo.Context) error {
@@ -58,15 +76,27 @@ func (h *eventHandler) CreateEvent(c echo.Context) error {
 
 	err := c.Bind(&item)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.JSON(http.StatusBadRequest, &base.Response{
+			Status:  http.StatusBadRequest,
+			Message: err.Error(),
+			Data:    nil,
+		})
 	}
 
 	resultItem, err := h.r.CreateEvent(item)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.JSON(http.StatusBadRequest, &base.Response{
+			Status:  http.StatusBadRequest,
+			Message: err.Error(),
+			Data:    nil,
+		})
 	}
 
-	return c.JSON(http.StatusCreated, resultItem)
+	return c.JSON(http.StatusCreated, &base.Response{
+		Status:  http.StatusCreated,
+		Message: base.SUCCESS_CREATE_DATA,
+		Data:    resultItem,
+	})
 }
 
 func (h *eventHandler) UpdateEvent(c echo.Context) error {
@@ -75,15 +105,27 @@ func (h *eventHandler) UpdateEvent(c echo.Context) error {
 
 	err := c.Bind(&item)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.JSON(http.StatusBadRequest, &base.Response{
+			Status:  http.StatusBadRequest,
+			Message: err.Error(),
+			Data:    nil,
+		})
 	}
 
 	resultItem, err := h.r.UpdateEvent(item)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.JSON(http.StatusBadRequest, &base.Response{
+			Status:  http.StatusBadRequest,
+			Message: err.Error(),
+			Data:    nil,
+		})
 	}
 
-	return c.JSON(http.StatusCreated, resultItem)
+	return c.JSON(http.StatusCreated, &base.Response{
+		Status:  http.StatusCreated,
+		Message: base.SUCCESS_UPDATE_DATA,
+		Data:    resultItem,
+	})
 }
 
 func (h *eventHandler) DeleteEvent(c echo.Context) error {
@@ -92,13 +134,25 @@ func (h *eventHandler) DeleteEvent(c echo.Context) error {
 
 	_, err := h.r.GetEvent(eventID)
 	if err != nil {
-		return c.JSON(http.StatusNotFound, err.Error())
+		return c.JSON(http.StatusNotFound, &base.Response{
+			Status:  http.StatusNotFound,
+			Message: err.Error(),
+			Data:    nil,
+		})
 	}
 
 	_, err = h.r.DeleteEvent(eventID)
 	if err != nil {
-		return c.JSON(http.StatusNotFound, err.Error())
+		return c.JSON(http.StatusNotFound, &base.Response{
+			Status:  http.StatusBadRequest,
+			Message: err.Error(),
+			Data:    nil,
+		})
 	}
 
-	return c.JSON(http.StatusOK, "Success delete event")
+	return c.JSON(http.StatusOK, &base.Response{
+		Status:  http.StatusOK,
+		Message: base.SUCCESS_DELETE_DATA,
+		Data:    nil,
+	})
 }

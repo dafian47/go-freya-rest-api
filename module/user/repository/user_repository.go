@@ -1,10 +1,11 @@
 package repository
 
 import (
+	"github.com/jinzhu/gorm"
+
 	base "github.com/dafian47/go-freya-rest-api/module"
 	model "github.com/dafian47/go-freya-rest-api/module/user"
 	"github.com/dafian47/go-freya-rest-api/util"
-	"github.com/jinzhu/gorm"
 )
 
 type UserRepository interface {
